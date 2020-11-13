@@ -1,6 +1,7 @@
 # helm-git
 
-[![CircleCI](https://circleci.com/gh/aslafy-z/helm-git/tree/master.svg?style=shield)](https://circleci.com/gh/aslafy-z/helm-git/tree/master)
+
+![GitHub Actions](https://github.com/aslafy-z/helm-git/workflows/test/badge.svg?branch=master)
 [![License MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](./LICENSE)
 [![GitHub release](https://img.shields.io/github/tag-date/aslafy-z/helm-git.svg)](https://github.com/aslafy-z/helm-git/releases)
 
@@ -15,7 +16,7 @@ This fits multiple use cases:
 
 Use `helm` CLI to install this plugin:
 
-    $ helm plugin install https://github.com/aslafy-z/helm-git --version 0.8.1
+    $ helm plugin install https://github.com/aslafy-z/helm-git --version 0.9.0
 
 To use the plugin, you only need `git`. If you want to build the plugin from source, or you want to contribute
 to the plugin, please see [these instructions](.github/CONTRIBUTING.md).
@@ -31,13 +32,14 @@ to the plugin, please see [these instructions](.github/CONTRIBUTING.md).
 
 Here's the Git urls format, followed by examples:
 
-    git+https://[provider.com]/[user]/[repo]@[path/to/charts][?[ref=git-ref]&[sparse=0]]
-    git+ssh://git@[provider.com]/[user]/[repo]@[path/to/charts][?[ref=git-ref]&[sparse=0]]
-    git+file://[path/to/repo]@[path/to/charts][?[ref=git-ref]&[sparse=0]]
+    git+https://[provider.com]/[user]/[repo]@[path/to/charts][?[ref=git-ref][&sparse=0][&depupdate=0]]
+    git+ssh://git@[provider.com]/[user]/[repo]@[path/to/charts][?[ref=git-ref][&sparse=0][&depupdate=0]]
+    git+file://[path/to/repo]@[path/to/charts][?[ref=git-ref][&sparse=0][&depupdate=0]]
 
     git+https://github.com/jetstack/cert-manager@deploy/charts?ref=v0.6.2&sparse=0
     git+ssh://git@github.com/jetstack/cert-manager@deploy/charts?ref=v0.6.2&sparse=1
     git+ssh://git@github.com/jetstack/cert-manager@deploy/charts?ref=v0.6.2
+    git+https://github.com/istio/istio@install/kubernetes/helm?ref=1.5.4&sparse=0&depupdate=0
 
 Add your repository:
 
@@ -56,12 +58,20 @@ Fetching also works:
     $ helm fetch cert-manager/cert-manager --version "0.6.6"
     $ helm fetch git+https://github.com/jetstack/cert-manager@deploy/charts/cert-manager-v0.6.2.tgz?ref=v0.6.2
 
+### Environment
+
+**name**|**description**|**default**
+:-----:|:-----:|:-----:
+`HELM_GIT_HELM_BIN`|Path to the `helm` binary. If not set, `$HELM_BIN` will be used|`helm`
+`HELM_GIT_DEBUG`|Increase `helm-git` log level to maximum|`0`
+
 ### Arguments
 
 **name**|**description**|**default**
 :-----:|:-----:|:-----:
 ref|Set git ref to a branch or tag. Works also for commits with `sparse=0`|`master`
-sparse|Set git strategy to sparse. Will try to fetch only the needed commits for the target path.|`1`
+sparse|Set git strategy to sparse. Will try to fetch only the needed commits for the target path|`1`
+depupdate|Run `helm dependency update` on the retrieved chart|`1`
 
 ### Note on Git authentication
 
